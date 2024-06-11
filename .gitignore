@@ -1,0 +1,163 @@
+# Compiled source code
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Python
+*.py[cod]
+__pycache__/
+*.pyo
+*.pyd
+*.pdb
+*.pyc
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+**/node_modules/
+
+# Environment variable files
+.env
+.env.local
+.env.*.local
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Directories
+build/
+dist/
+out/
+
+# Generated files
+*.lock
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.err
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*.bak
+*.old
+*.backup
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Visual Studio
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.user
+*.userosscache
+*.sln.docstates
+
+# Other editors
+*.kate-swp
+*~.nib
+
+# Specific configuration files
+config.gypi
+test/node_modules/
+.gyp/
+
+# Rust
+/target/
+Cargo.lock
+
+# Go
+bin/
+vendor/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Python
+*.pyc
+*.pyo
+__pycache__/
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PHPStorm
+.idea/
