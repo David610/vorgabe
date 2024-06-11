@@ -1,38 +1,27 @@
 #include "../lib/SRTN.h"
 
 static queue_object *SRTN_queue;
-//You can add more global variables here
 
-process *SRTN_tick(process *running_process)
-{
-    // Check if there's a running process
-    if (running_process) {
-        running_process->time_left--;
+// Function to find the process with the shortest remaining time
+process *find_shortest_remaining_time_process() {
+    if (!SRTN_queue || !SRTN_queue->front) return NULL;
 
-        // Check if the running process is finished
-        if (running_process->time_left == 0) {
-            queue_poll(SRTN_queue); // Remove the finished process from the queue
-            return find_shortest_remaining_time_process(); // Find the next process to run
+    queue_node *current_node = SRTN_queue->front;
+    process *shortest_time_process = (process *)current_node->data;
+
+    while (current_node) {
+        process *current_process = (process *)current_node->data;
+        if (current_process->time_left < shortest_time_process->time_left) {
+            shortest_time_process = current_process;
         }
-
-        // Check if there's a process with shorter remaining time
-        process *shortest_time_process = find_shortest_remaining_time_process();
-        if (shortest_time_process && shortest_time_process->time_left < running_process->time_left) {
-            queue_add(running_process, SRTN_queue); // Preempt the current process
-            queue_poll(SRTN_queue); // Remove the shortest remaining time process from the queue
-            return shortest_time_process; // Run the shortest remaining time process
-        }
-
-        return running_process; // Continue running the current process
+        current_node = current_node->next;
     }
 
-    return find_shortest_remaining_time_process(); // Find the next process to run if there's no running process
-
+    return shortest_time_process;
 }
 
-int SRTN_startup()
-{
-    // Create a new queue for SRTN processes
+// Initialize the SRTN scheduler
+int SRTN_startup() {
     SRTN_queue = new_queue();
     if (!SRTN_queue) {
         return 1; // Return 1 if queue initialization failed
@@ -40,30 +29,49 @@ int SRTN_startup()
     return 0; // Return 0 if everything was fine
 }
 
-process *SRTN_new_arrival(process *arriving_process, process *running_process)
-{
+// Handle new arriving processes
+process *SRTN_new_arrival(process *arriving_process, process *running_process) {
     if (arriving_process) {
         queue_add(arriving_process, SRTN_queue); // Add the new process to the queue
     }
 
-    // Check if the arriving process has shorter remaining time than the current running process
     if (running_process) {
         process *shortest_time_process = find_shortest_remaining_time_process();
         if (shortest_time_process && shortest_time_process->time_left < running_process->time_left) {
             queue_add(running_process, SRTN_queue); // Preempt the current process
-            queue_poll(SRTN_queue); // Remove the shortest remaining time process from the queue
-            return shortest_time_process; // Run the shortest remaining time process
+            queue_poll(SRTN_queue); // Remove the shortest time process from the queue
+            return shortest_time_process; // Run the shortest time process
         }
+        return running_process; // Continue running the current process
     }
 
-    return running_process;
+    return find_shortest_remaining_time_process(); // Find the next process to run if there's no running process
 }
 
-void SRTN_finish()
-{
-    // Free all processes in the queue
+// Handle the ticking of the scheduler
+process *SRTN_tick(process *running_process) {
+    if (running_process) {
+        running_process->time_left--;
+        if (running_process->time_left == 0) {
+            queue_poll(SRTN_queue); // Remove the finished process from the queue
+            return find_shortest_remaining_time_process(); // Find the next process to run
+        }
+        process *shortest_time_process = find_shortest_remaining_time_process();
+        if (shortest_time_process && shortest_time_process->time_left < running_process->time_left) {
+            queue_add(running_process, SRTN_queue); // Preempt the current process
+            queue_poll(SRTN_queue); // Remove the shortest time process from the queue
+            return shortest_time_process; // Run the shortest time process
+        }
+        return running_process; // Continue running the current process
+    }
+
+    return find_shortest_remaining_time_process(); // Find the next process to run if there's no running process
+}
+
+// Clean up the SRTN scheduler
+void SRTN_finish() {
     while (SRTN_queue->front) {
-        process *proc = queue_poll(SRTN_queue);
+        process *proc = (process *)queue_poll(SRTN_queue);
         free(proc);
     }
     free_queue(SRTN_queue);
